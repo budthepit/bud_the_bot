@@ -46,8 +46,8 @@ function onMessageHandler (channel, userstate, msg, self) {
     console.log(`* Executed ${commandName} command`);
   }
   // BudThePit
-  else if (commandName === 'budthepit' || '@budthepit') {        
-    client.say(channel, `BudThePit <3 you`);
+  else if (commandName === 'budthepit') {        
+    client.say(channel, `BudThePit <3 you GivePLZ`);
     console.log(`* Executed ${commandName} command`);
   }
   // else Unknown command

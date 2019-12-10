@@ -4,7 +4,8 @@
   "description": "BudThePit Twitch chat bot made with tmijs.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js",
+    "bot": "node app.js"
   },
   "author": "BudThePit",
   "license": "MIT",

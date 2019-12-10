@@ -1,0 +1,15 @@
+body{
+    font-family: 'Nunito';
+}
+
+h2{
+    font-size: 18px;
+    padding: 10px 20px;
+    color: #575ed8;
+}
+
+p{
+    font-size: 10px;
+    padding: 10px 20px;
+    color: #575ed8;
+}
