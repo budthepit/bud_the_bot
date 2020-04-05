@@ -28,11 +28,16 @@ function onMessageHandler (channel, userstate, msg, self) {
   const commandName = commandArray[0];
   const userName = `@${userstate['display-name']}`;
   const isMod = userstate.mod === true;
-  const isBroadcaster = userstate.badges.broadcaster === '1';
-
-  //* ----------------------------------------------- *
-  //* ---------------    Commands    ---------------- *
-  //* ----------------------------------------------- *  
+  function checkIfBroadcaster(userstate) {
+    if (userstate.badges === null) {
+      return false;      
+    } else if (userstate.badges.broadcaster === '1') {
+      return true;
+    }
+  }
+  const isBroadcaster = checkIfBroadcaster(userstate);
+  const isSub = userstate.subscriber;  
+  //* ---------------    Commands    ---------------- *  
   // !dice command
   if (commandName === '!dice') {
     const num = rollDice();
@@ -45,29 +50,40 @@ function onMessageHandler (channel, userstate, msg, self) {
     client.say(channel, `You flipped ${result}`);
     console.log(`* Executed ${commandName} command`);
   }
-  // BudThePit
-  else if (commandName === 'budthepit') {        
-    client.say(channel, `BudThePit <3 you GivePLZ`);
-    console.log(`* Executed ${commandName} command`);
+  // !bud hug  
+  else if (commandName === '!bud') {
+    if ( commandArray[1] === undefined) {
+      client.say(channel, `/me ${userName} gives all of you hugs GivePLZ <3 TakeNRG`);
+      console.log(`* Executed ${commandName} command`);
+      return;
+    }        
+    client.say(channel, `/me ${userName} gave ${commandArray[1]} a hug GivePLZ <3 TakeNRG`);
+    console.log(`* Executed ${commandName} command with parameter`);
+    return;
   }
+  // !test command
+  // else if (commandName === '!test') {    
+  //   client.say(channel, `TEST`);
+  //   console.log(`* ${JSON.stringify(userstate)}`);
+  //   console.log(`* ${isBroadcaster}`);
+  //   return;
+  // }
   // else Unknown command
   else {
-    console.log(`* Unknown command ${commandName}`);
+    //console.log(`${userName}: ${msg}`);
+    return;
   }
   
 }
-
-// ################################
 // ######## Woker Functions #######
-// ################################
 
-// Function called when the "dice" command is issued
+// Function called when the "!dice" command is issued
 function rollDice() {
     const sides = 6;
     return Math.floor(Math.random() * sides) + 1;
 }
 
-// Function called when the "dice" command is issued
+// Function called when the "!coinflip" command is issued
 function coinFlip() {
   const sides = 2;
   let num = Math.floor(Math.random() * sides) + 1;
@@ -80,7 +96,7 @@ function coinFlip() {
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler (addr, port) {
-    console.log(`* Connected to ${addr}:${port}`);
-    // on connect action message 
-    // client.action( opts.channels , "MrDestructoid Bud_The_Bot Has connected");
+  console.log(`* Connected to ${addr}:${port}`);
+  // on connect action message 
+  // client.action( opts.channels , "MrDestructoid Bud_The_Bot Has connected");
 }
