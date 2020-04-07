@@ -24,22 +24,51 @@ client.connect();
 function onMessageHandler (channel, userstate, msg, self) {
   if (self) { return; } // Ignore messages from the bot
   
+  // commands and inputs
   const commandArray = msg.trim().toLowerCase().split(' ');  
   const commandName = commandArray[0];
-  const userName = `@${userstate['display-name']}`;
-  const isMod = userstate.mod === true;
+  
+  // User Level / permission //
+  // isMod and isBrodcaster - checks is isMod and isBrodcaster are true of false
+  const isMod = userstate.mod;
+
+  //isBroadcaster
   function checkIfBroadcaster(userstate) {
-    if (userstate.badges === null) {
+    if (userstate['room-id'] !== userstate['user-id']) {
       return false;      
-    } else if (userstate.badges.broadcaster === '1') {
+    } else if (userstate['room-id'] === userstate['user-id']) { // userstate.room-id === userstate.user-id
       return true;
     }
   }
-  const isBroadcaster = checkIfBroadcaster(userstate);
-  const isSub = userstate.subscriber;  
+  const isBroadcaster = checkIfBroadcaster(userstate);  
+  
+  // isSub true or false
+  const isSub = userstate.subscriber;
+  
+  // isVIP    
+  function checkIfVIP(userstate) {
+    if ( isBroadcaster || userstate.badges === null ) {
+      return false;      
+    } else if (userstate.badges.vip === '1') {
+      return true;
+    }
+  }
+  const isVIP = checkIfVIP(userstate);
+
+  // Variables  //
+  const botName = process.env.BOT_USER_NAME_DISPLAY;
+  const userName = `@${userstate['display-name']}`;
+  const firstInput = commandArray[1];
+  
   //* ---------------    Commands    ---------------- *  
+  
+  // !commands command
+  if (commandName === '!commands') {    
+    client.say(channel, `!dice !coinflip !hug`);
+    console.log(`* Executed ${commandName} command`);
+  }
   // !dice command
-  if (commandName === '!dice') {
+  else if (commandName === '!dice') {
     const num = rollDice();
     client.say(channel, `You rolled a ${num}`);
     console.log(`* Executed ${commandName} command`);
@@ -50,27 +79,20 @@ function onMessageHandler (channel, userstate, msg, self) {
     client.say(channel, `You flipped ${result}`);
     console.log(`* Executed ${commandName} command`);
   }
-  // !bud hug  
-  else if (commandName === '!bud') {
+  // !hug  
+  else if (commandName === '!hug') {
     if ( commandArray[1] === undefined) {
       client.say(channel, `/me ${userName} gives all of you hugs GivePLZ <3 TakeNRG`);
       console.log(`* Executed ${commandName} command`);
       return;
     }        
-    client.say(channel, `/me ${userName} gave ${commandArray[1]} a hug GivePLZ <3 TakeNRG`);
+    client.say(channel, `/me ${userName} gave ${firstInput} a hug GivePLZ <3 TakeNRG`);
     console.log(`* Executed ${commandName} command with parameter`);
     return;
-  }
-  // !test command
-  // else if (commandName === '!test') {    
-  //   client.say(channel, `TEST`);
-  //   console.log(`* ${JSON.stringify(userstate)}`);
-  //   console.log(`* ${isBroadcaster}`);
-  //   return;
-  // }
+  }  
   // else Unknown command
   else {
-    //console.log(`${userName}: ${msg}`);
+    //console.log(`* unknown ${commandName}`);
     return;
   }
   
@@ -98,5 +120,5 @@ function coinFlip() {
 function onConnectedHandler (addr, port) {
   console.log(`* Connected to ${addr}:${port}`);
   // on connect action message 
-  // client.action( opts.channels , "MrDestructoid Bud_The_Bot Has connected");
+  // client.action( opts.channels , `MrDestructoid ${process.env.BOT_USER_NAME} Has connected`);
 }
