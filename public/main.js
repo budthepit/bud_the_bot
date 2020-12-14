@@ -1,1 +1,0 @@
-(function myApp(){console.log("myApp")})()
