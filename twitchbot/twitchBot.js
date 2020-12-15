@@ -1,6 +1,4 @@
 const tmi = require('tmi.js');
-const fs = require('fs');
-const fetch = require('node-fetch');
 const commandList = require('./commands/commands');
 require('dotenv').config();
 
