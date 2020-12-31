@@ -1,23 +1,13 @@
 const fetch = require('node-fetch');
 module.exports = [
     {
-        name: "!test",
+        name: "!testing",
         active: true,
         modOnly: false,
         hasArgs: false,
         cooldown: 5,
         execute(client, channel) {
             client.say(channel, `I am functioning within normal parameters MrDestructoid`)
-        }
-    },
-    {
-        name: "!ping2",
-        active: false,
-        modOnly: false,
-        hasArgs: false,
-        cooldown: 5,
-        execute(client, channel) {
-            client.say(channel, `This is a ping!`)
         }
     },
     {
@@ -64,6 +54,21 @@ module.exports = [
             }
             const result = coinFlip();
             client.say(channel, `You have flipped a ${result}`);
+        }
+    },
+    {
+        name: "!dice",
+        active: true,
+        modOnly: false,
+        hasArgs: false,
+        cooldown: 5,
+        execute(client, channel) {
+            const rollDice = ()=> {
+                const sides = 6;
+                return Math.floor(Math.random() * sides) + 1;
+            }
+            const result = rollDice();
+            client.say(channel, `You have rolled a ${result}`);
         }
     }
 ];
