@@ -16,7 +16,7 @@ const opts = {
 }
 
 const client = new tmi.client(opts);
-client.connect().catch(console.error);;
+client.connect().catch(console.error);
 
 client.on('message', (channel, userstate, msg, self)=> {  
   if (self) { return; } // Ignore messages from the bot
