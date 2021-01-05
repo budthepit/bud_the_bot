@@ -1,6 +1,6 @@
 {
   "name": "bud_the_bot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "BudThePit Twitch chat bot made with tmijs.",
   "main": "./server/server.js",
   "scripts": {

@@ -17,5 +17,5 @@ mongoose.connect(process.env.DATABASE_LINK , {
 app.use("/api/v1/user", require('../routes/api/botuser'));
 app.use("/api/v1/command", require('../routes/api/botcommands'));
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5555;
 app.listen(port, () => console.log(`server started on port ${port}`));
