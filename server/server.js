@@ -8,6 +8,7 @@ app.use(express.json());
 
 mongoose.connect(process.env.DATABASE_LINK , {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
     useCreateIndex: true
 })
 .then(()=> console.log("MongoDB Connected..."))
