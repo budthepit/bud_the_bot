@@ -1,6 +1,9 @@
 # Bud_The_Bot
-Twitch tmi.js node.js chat bot
-
+Twitch chat bot using tmi.js, node.js, ExpressJS and MongoDB.
+### Alpha v0.0.3:
+Module commands(Hard coded commands) and Custom commands(Commands from a datebase)
+* Custom commands - !c0mmands add/edit/delete 
+* Module commands - !dice, !coinflip 
 ##  Installation
 ```bash
 git clone https://github.com/budthepit/bud_the_bot.git

@@ -2,3 +2,5 @@
 .env
 ToDo.txt
 package-lock.json
+/IGNOTEME
+/todo

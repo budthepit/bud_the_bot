@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 module.exports = [
     {
-        name: "!testing2",
+        name: "!testing",
         active: true,
         modOnly: true,
         hasArgs: false,
