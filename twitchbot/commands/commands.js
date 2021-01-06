@@ -40,7 +40,7 @@ module.exports = [
         active: true,
         modOnly: true,
         hasArgs: true,
-        cooldown: 0,
+        cooldown: 1,
         execute(client, channel, userstate, args, response) {
             const channelID = userstate['room-id'];            
             if (!args[2]) {
@@ -132,11 +132,11 @@ module.exports = [
         }
     },
     {
-        name: "!modonly",
+        name: "!modonly2",
         active: true,
         modOnly: true,
         hasArgs: false,
-        cooldown: 0,
+        cooldown: 1,
         execute(client, channel) {
             client.say(channel, `This is a Mod Only command :p!`)
         }
@@ -146,7 +146,7 @@ module.exports = [
         active: false,
         modOnly: true,
         hasArgs: true,
-        cooldown: 0,
+        cooldown: 1,
         execute(client, channel, args) {
             if (!args[0]) {
                 client.say(channel, `No user name given`)

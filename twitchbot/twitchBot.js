@@ -4,6 +4,7 @@ const { prefix } = require('./config.json');
 const commandList = require('./commands/commands');
 const Command  = require('../models/Command');
 const Channel = require('../models/Channel');
+const Cooldowns = require('./Cooldowns.js');
 require('dotenv').config();
 
 const channelList = [ process.env.CHANNEL_USER_NAME  ]; 
@@ -20,7 +21,8 @@ const opts = {
 }
 
 const client = new tmi.client(opts);
-client.connect().catch(console.error);;
+client.connect().catch(console.error);
+const cooldowns = new Cooldowns();
 
 client.on('message', (channel, userstate, msg, self)=> {  
   if (self) { return; } // Ignore messages from the bot
@@ -63,31 +65,41 @@ client.on('message', (channel, userstate, msg, self)=> {
   const isVIP = checkIfVIP(userstate);
   // Variables  //
   const botName = process.env.BOT_USER_NAME_DISPLAY;
-  // const userName = `${userstate['display-name']}`;
+  const userName = `${userstate['display-name']}`;
+  const userID = `${userstate['user-id']}`;
   // const mentionUser = `@${userstate['display-name']}`;
-  // const firstInput = commandArray[1];
-  // const secondInput = commandArray[2];
-  // const thirdInput = commandArray[3];
-  // const forthInput = commandArray[4];  
+  // const firstInput = commandArray[1];  // const secondInput = commandArray[2];  // const thirdInput = commandArray[3];  // const forthInput = commandArray[4];  
   
   const isCommand = checkIfIsCommand(commandName);
   if (isCommand) {
     commandList.map(command=> {
       if(command.name === commandName && command.active) {
-  
-        if(command.modOnly && isMod) {
-          if(command.hasArgs) {
-            const commandsArg = getResponseString(commandArray[0].length + commandArray[1].length + commandArray[2].length + 3, msg)
-            command.execute(client , channel, userstate, commandArray, commandsArg);
-          } else {
-            command.execute(client , channel , userstate);
+
+        if (!cooldowns.has(command.name)) {
+          cooldowns.set(command.name, new Cooldowns());
+        }
+        const now = Date.now();
+        const timestamps = cooldowns.get(command.name);
+        const cooldownAmount = (command.cooldown || 3) * 1000;
+
+        if (!timestamps.has(userID)) {
+
+          if(command.modOnly && isMod) {
+            if(command.hasArgs) {
+              const commandsArg = getResponseString(commandArray[0].length + commandArray[1].length + commandArray[2].length + 3, msg)
+              command.execute(client , channel, userstate, commandArray, commandsArg);
+            } else {
+              command.execute(client , channel , userstate);
+            }
+          } else if(!command.modOnly) {
+            if(command.hasArgs) {
+              command.execute(client , channel, userstate, commandArray );
+            } else {
+              command.execute(client , channel , userstate);
+            }
           }
-        } else if(!command.modOnly) {
-          if(command.hasArgs) {
-            command.execute(client , channel, userstate, commandArray );
-          } else {
-            command.execute(client , channel , userstate);
-          }
+          timestamps.set(userID, now);
+          setTimeout(() => timestamps.delete(userID), cooldownAmount);          
         }
       }
     });
@@ -103,10 +115,25 @@ client.on('message', (channel, userstate, msg, self)=> {
             commandArray.map((commDB)=> {
               const currentCommand = commandName.substring(1);
               if (commDB.name === currentCommand) {
-                client.say(channel, `${commDB.response}`);
+                if (!cooldowns.has(commandName)) {
+                  cooldowns.set(commandName, new Cooldowns());
+                }
+                const now = Date.now();
+                const timestamps = cooldowns.get(commandName);
+                const cooldownAmount = (commDB.cooldown || 3) * 1000;
+                if (!timestamps.has(userID)) {
+                  if(commDB.mod_only && isMod) {
+                    client.say(channel, `${commDB.response}`);
+                    timestamps.set(userID, now);
+                    setTimeout(() => timestamps.delete(userID), cooldownAmount);
+                  } else if(!commDB.mod_only) {
+                    client.say(channel, `${commDB.response}`);
+                    timestamps.set(userID, now);
+                    setTimeout(() => timestamps.delete(userID), cooldownAmount);
+                  }
+                }
               }
-            });
-            
+            }); 
           }
       }
     });
