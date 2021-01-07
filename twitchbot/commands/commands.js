@@ -9,9 +9,10 @@ module.exports = [
         cooldown: 5,
         execute(client, channel, userstate) {
             const channelID = userstate['room-id'];
+            const channelName = channel.substring(1);
             const postPayload = {
                 channelID,
-                channel
+                channelName
             };
             try {
                 fetch('http://localhost:5555/api/v1/user/channelconfig', {
@@ -97,7 +98,7 @@ module.exports = [
                     
                 } else if(args[1] == "delete") {
                     const commandName2 = args[2].substring(1);
-                    const editPayload = {
+                    const deletePayload = {
                         name: commandName2, 
                         channel_id: channelID                        
                     };
@@ -107,7 +108,7 @@ module.exports = [
                             headers: {
                                 "Content-Type": "application/json",
                             },
-                            body: JSON.stringify(editPayload)
+                            body: JSON.stringify(deletePayload)
                         })
                         .then((res) => {
                             if (res.status === 200) {
@@ -132,29 +133,13 @@ module.exports = [
         }
     },
     {
-        name: "!modonly2",
+        name: "!modonly",
         active: true,
         modOnly: true,
         hasArgs: false,
         cooldown: 1,
         execute(client, channel) {
             client.say(channel, `This is a Mod Only command :p!`)
-        }
-    },
-    {
-        name: "!timeout",
-        active: false,
-        modOnly: true,
-        hasArgs: true,
-        cooldown: 1,
-        execute(client, channel, args) {
-            if (!args[0]) {
-                client.say(channel, `No user name given`)
-            } else if (args[1]) {
-                client.say(channel, `/timeout ${args[0]} ${args[1]}`)
-            } else if (args[0] && !args[1]) {
-                client.say(channel, `/timeout ${args[0]}`)
-            }
         }
     },
     {
