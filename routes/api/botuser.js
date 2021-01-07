@@ -7,7 +7,7 @@ const Channel = require('../../models/Channel');
 // @access  Public
 router.post('/channelconfig', (req, res) => {    
     const channelID = req.body.channelID;
-    const channel = req.body.channel;
+    const channel = req.body.channelName;
     try {
         Channel.findOne({id: channelID}, (err, channelRes)=> {
             if (!err) {

@@ -175,6 +175,32 @@ client.on("subgift", (channel, username, streakMonths, recipient, methods, users
   })
 });
 
+client.on("raided", (channel, username, viewers) => {
+  console.log("raided: ", new Date().getDate().toLocaleString());
+  console.log(channel, username, viewers);
+  const channelID = userstate['room-id'];
+  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+    if (!err) {
+      if(channelObj.settings.raid_alert) {
+        client.say(channel, `${username} has raided with a party of ${viewers}!`);        
+      }      
+    }
+  })
+});
+
+client.on("hosted", (channel, username, viewers, autohost) => {
+  console.log("hosted: ", new Date().getDate().toLocaleString());
+  console.log(channel, username, viewers, autohost);
+  const channelID = userstate['room-id'];
+  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+    if (!err) {
+      if(channelObj.settings.host_alert) {
+        client.say(channel, `@${username} Thanks for the ${viewers} viewer host!`);
+      }      
+    }
+  })
+});
+
 // Called every time the bot connects to Twitch chat
 client.on('connected', (addr, port)=> {
   console.log(`* Connected to ${addr}:${port}`);

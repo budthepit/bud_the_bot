@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 module.exports = [
     {
-        name: "!testing",
+        name: "!config",
         active: true,
         modOnly: true,
         hasArgs: false,
@@ -10,7 +10,7 @@ module.exports = [
         execute(client, channel, userstate) {
             const channelID = userstate['room-id'];
             const channelName = channel.substring(1);
-            const postPayload = {
+            const configPayload = {
                 channelID,
                 channelName
             };
@@ -20,7 +20,7 @@ module.exports = [
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(postPayload)
+                    body: JSON.stringify(configPayload)
                 })
                 .then(res => {
                     if (res.status === 200) return res.json();                    
