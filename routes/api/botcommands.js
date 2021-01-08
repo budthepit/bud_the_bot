@@ -2,21 +2,25 @@ const router = require('express').Router();
 const User = require('../../models/User');
 const Command = require('../../models/Command');
 
-// @route   GET /getuserlist
+// @route   POST /getcommand
 // @desc    Get an array of all the users
 // @access  Public
-router.get('/getcommand', (req, res) => {
-    Command.findOne({command: "", channel: ""}, (err, commandRes)=>{
-        if(!err) {
-            if (commandRes) {
-                res.json({
-                    command: commandRes.command
-                })
+router.post('/getcommand', (req, res) => {
+    try {
+        const channelID = req.body.channel_id;
+        const commandName = req.body.name;
+        Command.findOne({channel_id: channelID, command_name: commandName}, (err, commandRes)=>{
+            if(!err) {
+                if (commandRes) {
+                    res.json({
+                        command: commandRes.command
+                    })
+                }
             }
-        } else {
-            console.log(err);
-        }
-    })
+        })
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 // @route   POST /newuser
@@ -24,15 +28,15 @@ router.get('/getcommand', (req, res) => {
 // @access  Public
 router.post('/addcommand', (req, res) => {
     const channelID = req.body.channel_id;
-    const commandName = req.body.name;    
+    const commandName = req.body.name;
     const response = req.body.response;
     try {
-        Command.findOne({command: commandName, channel: channelID}, (err, commandRes)=> {
+        Command.findOne({command_name: commandName, channel: channelID}, (err, commandRes)=> {
             if (!err) {
                 if (!commandRes) {
                     new Command({
                         channel_id: channelID,
-                        name: commandName,
+                        command_name: commandName,
                         response: response,
                         cooldown: 5,
                         args: false,
@@ -60,7 +64,7 @@ router.post('/editcommand', (req, res) => {
     const response = req.body.response;
     try {
         Command.updateOne(
-            {name: commandName, channel_id: channelID},
+            {command_name: commandName, channel_id: channelID},
             { $set: {       
                 response: response
             }},
@@ -82,7 +86,7 @@ router.delete('/delcommand', (req, res) => {
     const channelID = req.body.channel_id;
     const commandName = req.body.name;    
     try {
-        Command.deleteOne({name: commandName, channel_id: channelID})
+        Command.deleteOne({command_name: commandName, channel_id: channelID})
         .then(()=> {
             res.status(200).send('Command added')
         });

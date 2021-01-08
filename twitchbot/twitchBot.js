@@ -103,40 +103,44 @@ client.on('message', (channel, userstate, msg, self)=> {
         }
       }
     });
-    const channelID = userstate['room-id'];
-    Command.find({channel_id: channelID},(err, commandObj)=> {
-      let commandArray =  [];
-      for (const command in commandObj) {        
-        if (Object.hasOwnProperty.call(commandObj, command)) {
-            const currentCommand = commandObj[command];
-            commandArray.push(currentCommand._doc)
+    try {
+      const channelID = userstate['room-id'];
+      Command.find({channel_id: channelID},(err, commandObj)=> {
+        let commandArray =  [];
+        for (const command in commandObj) {        
+          if (Object.hasOwnProperty.call(commandObj, command)) {
+              const currentCommand = commandObj[command];
+              commandArray.push(currentCommand._doc)
+          }
         }
-      }
-      if (commandArray.length > 0) {
-        commandArray.map((commDB)=> {
-          const currentCommand = commandName.substring(1);
-          if (commDB.name === currentCommand) {
-            if (!cooldowns.has(commandName)) {
-              cooldowns.set(commandName, new Cooldowns());
-            }
-            const now = Date.now();
-            const timestamps = cooldowns.get(commandName);
-            const cooldownAmount = (commDB.cooldown || 3) * 1000;
-            if (!timestamps.has(userID)) {
-              if(commDB.mod_only && isMod) {
-                client.say(channel, `${commDB.response}`);
-                timestamps.set(userID, now);
-                setTimeout(() => timestamps.delete(userID), cooldownAmount);
-              } else if(!commDB.mod_only) {
-                client.say(channel, `${commDB.response}`);
-                timestamps.set(userID, now);
-                setTimeout(() => timestamps.delete(userID), cooldownAmount);
+        if (commandArray.length > 0) {
+          commandArray.map((commDB)=> {
+            const currentCommand = commandName.substring(1);
+            if (commDB.command_name === currentCommand) {
+              if (!cooldowns.has(commandName)) {
+                cooldowns.set(commandName, new Cooldowns());
+              }
+              const now = Date.now();
+              const timestamps = cooldowns.get(commandName);
+              const cooldownAmount = (commDB.cooldown || 3) * 1000;
+              if (!timestamps.has(userID)) {
+                if(commDB.mod_only && isMod) {
+                  client.say(channel, `${commDB.response}`);
+                  timestamps.set(userID, now);
+                  setTimeout(() => timestamps.delete(userID), cooldownAmount);
+                } else if(!commDB.mod_only) {
+                  client.say(channel, `${commDB.response}`);
+                  timestamps.set(userID, now);
+                  setTimeout(() => timestamps.delete(userID), cooldownAmount);
+                }
               }
             }
-          }
-        }); 
-      }
-    });
+          }); 
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 });
 // New sub
