@@ -16,8 +16,8 @@ router.post('/channelconfig', (req, res) => {
                 } else {
                     try {
                         new Channel({
-                            name: channel,
-                            id: channelID
+                            channel_name: channel,
+                            channel_id: channelID
                         }).save()
                         .then(()=> {
                             res.json({message: "Channel database created."})
