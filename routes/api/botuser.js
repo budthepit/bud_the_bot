@@ -30,28 +30,6 @@ router.post('/channelconfig', (req, res) => {
         console.log(error);
         res.json({message: "There was an Error."})
     }
-    
-    
-    
-    
-    
-    
-    // User.findOne({name: req.body.name})
-    //     .then( user => {
-    //         if(user) {
-    //             return res.status(418).json({ msg: 'User allready exists' })
-    //         };
-    //         console.log('* New user added to the database');
-    //         const newUser = new User({
-    //             name: req.body.name,
-    //             mod: req.body.mod,
-    //             broadcaster: req.body.broadcaster
-    //         });
-    //         newUser.save();
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //     });    
 });
 
 // @route   GET /getuserlist

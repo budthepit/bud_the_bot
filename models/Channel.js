@@ -16,7 +16,7 @@ const channelSchema = new Schema({
 		type: String,
 		required: true
     },
-    id: {
+    channel_id: {
         type: String,
 		required: true
     },

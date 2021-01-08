@@ -141,64 +141,91 @@ client.on('message', (channel, userstate, msg, self)=> {
 });
 // New sub
 client.on("subscription", (channel, username, method, message, userstate) => {
-  const channelID = userstate['room-id'];
-  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
-    if (!err) {
-      if(channelObj.settings.resub_alert) {
-        client.say(channel, `@${username} thank you for subscribing <3`);
-      }      
-    }
-  })
+  try {
+    const channelID = userstate['room-id'];
+    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+      if (!err) {
+        if(channelObj) {
+          if(channelObj.settings.resub_alert) {
+            client.say(channel, `@${username} thank you for subscribing <3`);
+          }
+        }   
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Resub
 client.on("resub", (channel, username, months, message, userstate, methods) => {  
-  const cumulativeMonths = userstate["msg-param-cumulative-months"];
-  const channelID = userstate['room-id'];
-  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
-    if (!err) {
-      if(channelObj.settings.resub_alert) {
-        client.say(channel, `@${username} thank you for resubscribing for ${cumulativeMonths} months <3`);
-      }      
-    }
-  })
+  try {
+    const cumulativeMonths = userstate["msg-param-cumulative-months"];
+    const channelID = userstate['room-id'];
+    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+      if (!err) {
+        if(channelObj) {
+          if(channelObj.settings.resub_alert) {
+            client.say(channel, `@${username} thank you for resubscribing for ${cumulativeMonths} months <3`);
+          }
+        }      
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 client.on("subgift", (channel, username, streakMonths, recipient, methods, userstate) => {
-  const channelID = userstate['room-id'];
-  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
-    if (!err) {
-      if(channelObj.settings.giftsub_alert) {
-        client.say(channel, `${userstate["system-msg"]}`);
-      }      
-    }
-  })
+  try {
+    const channelID = userstate['room-id'];
+    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+      if (!err) {
+        if(channelObj) {
+          if(channelObj.settings.giftsub_alert) {
+            client.say(channel, `${userstate["system-msg"]}`);
+          }
+        }      
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-client.on("raided", (channel, username, viewers) => {
-  console.log("raided: ", new Date().getDate().toLocaleString());
-  console.log(channel, username, viewers);
-  const channelID = userstate['room-id'];
-  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
-    if (!err) {
-      if(channelObj.settings.raid_alert) {
-        client.say(channel, `${username} has raided with a party of ${viewers}!`);        
-      }      
-    }
-  })
+client.on("raided", (channel, username, viewers) => {  
+  try {
+    const channelID = userstate['room-id'];
+    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+      if (!err) {
+        if(channelObj) {
+          if(channelObj.settings.raid_alert) {
+            client.say(channel, `${username} has raided with a party of ${viewers}!`);
+            client.say(channel, `!raid2`);
+          }
+        }      
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-client.on("hosted", (channel, username, viewers, autohost) => {
-  console.log("hosted: ", new Date().getDate().toLocaleString());
-  console.log(channel, username, viewers, autohost);
-  const channelID = userstate['room-id'];
-  Channel.findOne({channel_id: channelID},(err, channelObj)=> {
-    if (!err) {
-      if(channelObj.settings.host_alert) {
-        client.say(channel, `@${username} Thanks for the ${viewers} viewer host!`);
-      }      
-    }
-  })
+client.on("hosted", (channel, username, viewers, autohost) => {  
+  try {
+    const channelID = userstate['room-id'];
+    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+      if (!err) {
+        if(channelObj) {
+          if(channelObj.settings.host_alert) {
+            client.say(channel, `@${username} Thanks for the ${viewers} viewer host!`);
+          }
+        }      
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Called every time the bot connects to Twitch chat
