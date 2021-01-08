@@ -12,7 +12,7 @@ const settingsSchecma = new Schema({
 });
 
 const channelSchema = new Schema({
-	name: {
+	channel_name: {
 		type: String,
 		required: true
     },

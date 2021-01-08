@@ -195,13 +195,12 @@ client.on("subgift", (channel, username, streakMonths, recipient, methods, users
 
 client.on("raided", (channel, username, viewers) => {  
   try {
-    const channelID = userstate['room-id'];
-    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+    const channelName = channel.substring(1);
+    Channel.findOne({channel_name: channelName},(err, channelObj)=> {
       if (!err) {
         if(channelObj) {
           if(channelObj.settings.raid_alert) {
             client.say(channel, `${username} has raided with a party of ${viewers}!`);
-            client.say(channel, `!raid2`);
           }
         }      
       }
@@ -213,8 +212,8 @@ client.on("raided", (channel, username, viewers) => {
 
 client.on("hosted", (channel, username, viewers, autohost) => {  
   try {
-    const channelID = userstate['room-id'];
-    Channel.findOne({channel_id: channelID},(err, channelObj)=> {
+    const channelName = channel.substring(1);
+    Channel.findOne({channel_name: channelName},(err, channelObj)=> {
       if (!err) {
         if(channelObj) {
           if(channelObj.settings.host_alert) {
