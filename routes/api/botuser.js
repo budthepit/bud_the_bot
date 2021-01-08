@@ -9,7 +9,7 @@ router.post('/channelconfig', (req, res) => {
     const channelID = req.body.channelID;
     const channel = req.body.channelName;
     try {
-        Channel.findOne({id: channelID}, (err, channelRes)=> {
+        Channel.findOne({channel_id: channelID}, (err, channelRes)=> {
             if (!err) {
                 if (channelRes) {
                     res.json({message: "Channel database allready existed."})
